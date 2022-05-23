@@ -10,12 +10,10 @@ public class Vendor {
     private double comission;
     private String comissionDescription;
 
-    public Vendor(long cedula, String name, Rank currentRank, double comission, String comissionDescription) {
+    public Vendor(long cedula, String name, Rank currentRank) {
         this.cedula = cedula;
         this.name = name;
         this.currentRank = currentRank;
-        this.comission = comission;
-        this.comissionDescription = comissionDescription;
     }
 
     public long getCedula() {

@@ -3,14 +3,30 @@ package main.java.com.vendors.list;
 import main.java.com.vendors.tree.TreeNode;
 
 public class List {
-    ListNode head;
-    ListNode tail;
+    private ListNode head;
+    private ListNode tail;
 
     public List() {
         this.head = this.tail = null;
     }
 
-    public void agregarPunto(TreeNode treeNode) {
+    public ListNode getHead() {
+        return head;
+    }
+
+    public void setHead(ListNode head) {
+        this.head = head;
+    }
+
+    public ListNode getTail() {
+        return tail;
+    }
+
+    public void setTail(ListNode tail) {
+        this.tail = tail;
+    }
+
+    public void add(TreeNode treeNode) {
         if (!isEmpty()) {
             tail.setNext(new ListNode(treeNode, null));
             tail = tail.getNext();
@@ -21,5 +37,15 @@ public class List {
 
     public boolean isEmpty() {
         return head == null;
+    }
+
+    public void printList() {
+        if (isEmpty()) return;
+        ListNode current = head;
+
+        while (current != null) {
+            System.out.println(current.getTreeNode().getVendor().getName());
+            current = current.getNext();
+        }
     }
 }
