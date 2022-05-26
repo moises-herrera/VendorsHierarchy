@@ -7,13 +7,15 @@ public class Vendor {
     private String name;
     private Rank previousRank;
     private Rank currentRank;
+    private double salesMonthly;
     private double comission;
     private String comissionDescription;
 
-    public Vendor(long cedula, String name, Rank currentRank) {
+    public Vendor(long cedula, String name, Rank currentRank, double salesMonthly) {
         this.cedula = cedula;
         this.name = name;
         this.currentRank = currentRank;
+        this.salesMonthly = salesMonthly;
     }
 
     public long getCedula() {
@@ -43,6 +45,14 @@ public class Vendor {
 
     public void setPreviousRank(Rank previousRank) {
         this.previousRank = previousRank;
+    }
+
+    public double getSalesMonthly() {
+        return salesMonthly;
+    }
+
+    public void setSalesMonthly(double salesMonthly) {
+        this.salesMonthly = salesMonthly;
     }
 
     public double getComission() {

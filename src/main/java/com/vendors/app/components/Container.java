@@ -45,11 +45,12 @@ public class Container extends JFrame {
                             long cedula = Long.parseLong(attributes[0]);
                             String name = attributes[1];
                             Rank currentRank = Rank.valueOf(attributes[2].toUpperCase());
+                            double salesMonthly = Double.parseDouble(attributes[3]);
                             long parentId = 0;
                             if (attributes.length == 5)
                                 parentId = Long.parseLong(attributes[4]);
 
-                            Vendor person = new Vendor(cedula, name, currentRank);
+                            Vendor person = new Vendor(cedula, name, currentRank, salesMonthly);
                             vendors.insert(person, parentId);
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
@@ -58,5 +59,23 @@ public class Container extends JFrame {
                 }
             }
         });
+    }
+
+    public void assignRank(Vendor person) {
+        if (vendors.verifyRankCopper(person)) {
+            person.setCurrentRank(Rank.COBRE);
+        }
+
+        if (vendors.verifyRankBronze(person)) {
+            person.setCurrentRank(Rank.BRONCE);
+        }
+
+        if (vendors.verifyRankSilver(person)) {
+            person.setCurrentRank(Rank.PLATA);
+        }
+
+        if (vendors.verifyRankGold(person)) {
+            person.setCurrentRank(Rank.ORO);
+        }
     }
 }
