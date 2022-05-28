@@ -1,5 +1,6 @@
 package main.com.vendors.models;
 
+import org.json.JSONObject;
 import main.com.vendors.enums.Rank;
 
 import java.util.HashMap;
@@ -84,6 +85,17 @@ public class Vendor {
         }
 
         return description;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject vendor = new JSONObject();
+        vendor.put("name", name);
+        vendor.put("prevrank", previousRank.getType());
+        vendor.put("currank", currentRank.getType());
+        vendor.put("comision", getCommission());
+        vendor.put("comisiondesc", getCommissionDescription());
+
+        return vendor;
     }
 
     public double calculateCommission() {
