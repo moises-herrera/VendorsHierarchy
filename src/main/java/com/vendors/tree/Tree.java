@@ -264,4 +264,49 @@ public class Tree {
         return null;
     }
 
+    public double getLevelCommission(Vendor person) {
+        TreeNode vendorParent = root;
+
+        if (person.getCedula() != root.getVendor().getCedula()) {
+            vendorParent = findParentById(root.getChildren(), person.getCedula());
+        }
+
+        double commission = calculateLevelCommission(vendorParent.getChildren());
+
+        return commission;
+    }
+
+    public double calculateLevelCommission(List children) {
+        return calculateLevelCommission(children, 0, 0);
+    }
+
+    public double calculateLevelCommission(List children, int currentLevel, double commission) {
+        ListNode current = children.getHead();
+
+        while (current != null) {
+            double childSales = current.getTreeNode().getVendor().getSalesMonthly();
+            double percentageLevel = 0;
+
+            if (currentLevel == 1) {
+                percentageLevel = 1;
+            } else if (currentLevel == 2) {
+                percentageLevel = 2;
+            } else if (currentLevel >= 3) {
+                percentageLevel = 3;
+            }
+
+            percentageLevel = percentageLevel / 100;
+
+            commission += childSales * percentageLevel;
+
+            if (!current.getTreeNode().getChildren().isEmpty()) {
+                return calculateLevelCommission(current.getTreeNode().getChildren(), ++currentLevel, commission);
+            }
+
+            current = current.getNext();
+        }
+
+        return commission;
+    }
+
 }
