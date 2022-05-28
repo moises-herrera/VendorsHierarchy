@@ -56,40 +56,11 @@ public class Container extends JFrame {
                             throw new RuntimeException(ex);
                         }
                     }
+
+                    vendors.assignRanks(vendors.getRoot());
                 }
             }
         });
     }
 
-    public void assignRank(Vendor person) {
-        if (vendors.verifyRankCopper(person)) {
-            person.setCurrentRank(Rank.COBRE);
-        }
-
-        if (vendors.verifyRankBronze(person)) {
-            person.setCurrentRank(Rank.BRONCE);
-        }
-
-        if (vendors.verifyRankSilver(person)) {
-            person.setCurrentRank(Rank.PLATA);
-        }
-
-        if (vendors.verifyRankGold(person)) {
-            person.setCurrentRank(Rank.ORO);
-        }
-    }
-
-    public void assignComission(Vendor person, Rank currentRank) {
-        switch (currentRank) {
-            case COBRE:
-                person.setComission(0.1);
-                break;
-            case BRONCE:
-                person.setComission(0.15);
-            case PLATA:
-                person.setComission(0.2);
-            case ORO:
-                person.setComission(0.25);
-        }
-    }
 }

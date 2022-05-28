@@ -53,6 +53,36 @@ public class Tree {
         return current != null ? current.getTreeNode() : null;
     }
 
+    public void assignRanks(TreeNode root) {
+        ListNode current = root.getChildren().getHead();
+
+        while (current != null) {
+            if (verifyRankCopper(root.getVendor())) {
+                root.getVendor().setCurrentRank(Rank.COBRE);
+            }
+
+            if (verifyRankBronze(root.getVendor())) {
+                root.getVendor().setCurrentRank(Rank.BRONCE);
+            }
+
+            if (verifyRankSilver(root.getVendor())) {
+                root.getVendor().setCurrentRank(Rank.PLATA);
+            }
+
+            if (verifyRankGold(root.getVendor())) {
+                root.getVendor().setCurrentRank(Rank.ORO);
+            }
+
+            if (!current.getTreeNode().getChildren().isEmpty()) {
+                assignRanks(current.getTreeNode());
+            }
+
+            System.out.println(root.getVendor().getName() + " Rank: " + root.getVendor().getCurrentRank());
+
+            current = current.getNext();
+        }
+    }
+
     public boolean verifyRankCopper(Vendor person) {
         if (person.getSalesMonthly() >= 0) {
             return true;
@@ -62,7 +92,12 @@ public class Tree {
     }
 
     public boolean verifyRankBronze(Vendor person) {
-        TreeNode vendorParent = findParentById(root.getChildren(), person.getCedula());
+        TreeNode vendorParent = root;
+
+        if (person.getCedula() != root.getVendor().getCedula()) {
+            vendorParent = findParentById(root.getChildren(), person.getCedula());
+        }
+
         boolean childrenSalesForBronze = checkSalesByLevel(vendorParent.getChildren(), 1);
 
         if (person.getSalesMonthly() > 200000 && childrenSalesForBronze) {
@@ -73,7 +108,12 @@ public class Tree {
     }
 
     public boolean verifyRankSilver(Vendor person) {
-        TreeNode vendorParent = findParentById(root.getChildren(), person.getCedula());
+        TreeNode vendorParent = root;
+
+        if (person.getCedula() != root.getVendor().getCedula()) {
+            vendorParent = findParentById(root.getChildren(), person.getCedula());
+        }
+
         double childrenSales = calculateChildrenSales(vendorParent.getChildren(), 0);
         int childrenInOne = countChildrenByLevel(vendorParent.getChildren(), 0, 0);
 
@@ -85,7 +125,12 @@ public class Tree {
     }
 
     public boolean verifyRankGold(Vendor person) {
-        TreeNode vendorParent = findParentById(root.getChildren(), person.getCedula());
+        TreeNode vendorParent = root;
+
+        if (person.getCedula() != root.getVendor().getCedula()) {
+            vendorParent = findParentById(root.getChildren(), person.getCedula());
+        }
+
         double childrenSales = calculateChildrenSales(vendorParent.getChildren(), 0);
         TreeNode childWithSilver = existsChildWithRank(vendorParent.getChildren(), 0, Rank.PLATA);
         int treeLevels = countTreeLevels(vendorParent.getChildren(), 0);
