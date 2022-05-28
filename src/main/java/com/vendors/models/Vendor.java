@@ -11,7 +11,7 @@ public class Vendor {
     private Rank previousRank;
     private Rank currentRank;
     private double salesMonthly;
-    private Map<String, Double> commission;
+    private final Map<String, Double> commission;
 
     public Vendor(long cedula, String name, Rank currentRank, double salesMonthly) {
         this.cedula = cedula;
@@ -58,12 +58,18 @@ public class Vendor {
         this.salesMonthly = salesMonthly;
     }
 
-    public double getCommission(String type) {
-        return commission.get(type);
+    public double getCommission() {
+        double commissionValue = calculateCommission();
+
+        return commissionValue;
     }
 
     public void setCommissionType(String type, double percentage) {
         commission.put(type, percentage);
+    }
+
+    public double getCommissionType(String type) {
+        return commission.get(type);
     }
 
     public String getCommissionDescription() {
@@ -76,6 +82,16 @@ public class Vendor {
         }
 
         return description;
+    }
+
+    public double calculateCommission() {
+        double accumulator = 0;
+
+        for (Map.Entry<String, Double> entry : commission.entrySet()) {
+            accumulator += salesMonthly * entry.getValue();
+        }
+
+        return accumulator;
     }
 
     public void assignPersonalCommission() {
