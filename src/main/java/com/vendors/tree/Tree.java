@@ -133,7 +133,7 @@ public class Tree {
 
         double childrenSales = calculateChildrenSales(vendorParent.getChildren(), 0);
         TreeNode childWithSilver = existsChildWithRank(vendorParent.getChildren(), 0, Rank.PLATA);
-        int treeLevels = countTreeLevels(vendorParent.getChildren(), 0);
+        int treeLevels = countTreeLevels(vendorParent.getChildren());
 
         if (person.getSalesMonthly() > 400000 && childrenSales > 2000000 && childWithSilver != null && treeLevels >= 3) {
             return true;
@@ -181,12 +181,17 @@ public class Tree {
         return sales;
     }
 
+    public int countTreeLevels(List children) {
+        return countTreeLevels(children, 0);
+    }
+
     public int countTreeLevels(List children, int level) {
         ListNode current = children.getHead();
+        ++level;
 
         while (current != null) {
             if (!current.getTreeNode().getChildren().isEmpty()) {
-                return countTreeLevels(current.getTreeNode().getChildren(), ++level);
+                return countTreeLevels(current.getTreeNode().getChildren(), level);
             }
 
             current = current.getNext();
