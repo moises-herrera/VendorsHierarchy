@@ -21,6 +21,7 @@ public class Container extends JFrame {
         setSize(450, 300);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         vendors = new Tree();
+        setLocationRelativeTo(null);
         setVisible(true);
         button1.addActionListener(new ActionListener() {
             @Override

@@ -98,9 +98,10 @@ public class Tree {
             vendorParent = findParentById(root.getChildren(), person.getCedula());
         }
 
-        boolean childrenSalesForBronze = checkSalesByLevel(vendorParent.getChildren(), 1);
+        double salesInLevelOne = calculateChildrenSalesByLevel(vendorParent.getChildren(), 1);
+        System.out.println(person.getName() + " sales: " + salesInLevelOne);
 
-        if (person.getSalesMonthly() > 200000 && childrenSalesForBronze) {
+        if (person.getSalesMonthly() > 200000 && salesInLevelOne > 300000) {
             return true;
         }
 
@@ -135,29 +136,34 @@ public class Tree {
         TreeNode childWithSilver = existsChildWithRank(vendorParent.getChildren(), 0, Rank.PLATA);
         int treeLevels = countTreeLevels(vendorParent.getChildren(), 0);
 
-        if (person.getSalesMonthly() > 400000 && childrenSales > 2000000 &&  childWithSilver != null && treeLevels >= 3) {
+        if (person.getSalesMonthly() > 400000 && childrenSales > 2000000 && childWithSilver != null && treeLevels >= 3) {
             return true;
         }
 
         return false;
     }
 
-    public boolean checkSalesByLevel(List children, int level) {
+    public double calculateChildrenSalesByLevel(List children, int checkLevel) {
+        return calculateChildrenSalesByLevel(children, 0, 0, checkLevel);
+    }
+
+    public double calculateChildrenSalesByLevel(List children, double sales, int currentLevel, int checkLevel) {
         ListNode current = children.getHead();
+        ++currentLevel;
 
         while (current != null) {
-            if (level == 1 && current.getTreeNode().getVendor().getSalesMonthly() > 300000) {
-                return true;
+            if (currentLevel == checkLevel) {
+                sales += current.getTreeNode().getVendor().getSalesMonthly();
             }
 
             if (!current.getTreeNode().getChildren().isEmpty()) {
-                checkSalesByLevel(current.getTreeNode().getChildren(), ++level);
+                return calculateChildrenSalesByLevel(current.getTreeNode().getChildren(), sales, currentLevel, checkLevel);
             }
 
             current = current.getNext();
         }
 
-        return false;
+        return sales;
     }
 
     public double calculateChildrenSales(List children, double sales) {
