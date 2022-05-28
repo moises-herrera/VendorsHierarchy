@@ -53,31 +53,44 @@ public class Tree {
         return current != null ? current.getTreeNode() : null;
     }
 
-    public void assignRanks(TreeNode root) {
-        ListNode current = root.getChildren().getHead();
+    public void assignRanks(TreeNode localeRoot) {
+        ListNode current = localeRoot.getChildren().getHead();
+
+        if (verifyRankCopper(localeRoot.getVendor())) {
+            localeRoot.getVendor().setCurrentRank(Rank.COBRE);
+        }
+
+        if (verifyRankBronze(localeRoot.getVendor())) {
+            localeRoot.getVendor().setCurrentRank(Rank.BRONCE);
+        }
+
+        if (verifyRankSilver(localeRoot.getVendor())) {
+            localeRoot.getVendor().setCurrentRank(Rank.PLATA);
+        }
+
+        if (verifyRankGold(localeRoot.getVendor())) {
+            localeRoot.getVendor().setCurrentRank(Rank.ORO);
+        }
 
         while (current != null) {
-            if (verifyRankCopper(root.getVendor())) {
-                root.getVendor().setCurrentRank(Rank.COBRE);
-            }
-
-            if (verifyRankBronze(root.getVendor())) {
-                root.getVendor().setCurrentRank(Rank.BRONCE);
-            }
-
-            if (verifyRankSilver(root.getVendor())) {
-                root.getVendor().setCurrentRank(Rank.PLATA);
-            }
-
-            if (verifyRankGold(root.getVendor())) {
-                root.getVendor().setCurrentRank(Rank.ORO);
-            }
-
             if (!current.getTreeNode().getChildren().isEmpty()) {
                 assignRanks(current.getTreeNode());
             }
 
-            System.out.println(root.getVendor().getName() + " Rank: " + root.getVendor().getCurrentRank());
+            current = current.getNext();
+        }
+    }
+
+    public void assignCommissions(TreeNode localeRoot) {
+        ListNode current = localeRoot.getChildren().getHead();
+
+        localeRoot.getVendor().assignPersonalCommission();
+        localeRoot.getVendor().assignLevelUpCommission();
+
+        while (current != null) {
+            if (!current.getTreeNode().getChildren().isEmpty()) {
+                assignCommissions(current.getTreeNode());
+            }
 
             current = current.getNext();
         }
@@ -114,7 +127,7 @@ public class Tree {
             vendorParent = findParentById(root.getChildren(), person.getCedula());
         }
 
-        double childrenSales = calculateChildrenSales(vendorParent.getChildren(), 0);
+        double childrenSales = calculateChildrenSales(vendorParent.getChildren());
         int childrenInLevelOne = countChildrenByLevel(vendorParent.getChildren(), 1);
 
         if (person.getSalesMonthly() > 300000 && childrenSales > 1000000 && childrenInLevelOne >= 3) {
@@ -132,7 +145,7 @@ public class Tree {
         }
 
         double childrenSales = calculateChildrenSales(vendorParent.getChildren());
-        TreeNode childWithSilver = existsChildWithRank(vendorParent.getChildren(), 0, Rank.PLATA);
+        TreeNode childWithSilver = existsChildWithRank(vendorParent.getChildren(), Rank.PLATA);
         int treeLevels = countTreeLevels(vendorParent.getChildren());
 
         if (person.getSalesMonthly() > 400000 && childrenSales > 2000000 && childWithSilver != null && treeLevels >= 3) {
@@ -227,6 +240,10 @@ public class Tree {
         }
 
         return counter;
+    }
+
+    public TreeNode existsChildWithRank(List children, Rank rank) {
+        return existsChildWithRank(children, 0, rank);
     }
 
     public TreeNode existsChildWithRank(List children, int level, Rank rank) {

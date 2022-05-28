@@ -11,14 +11,14 @@ public class Vendor {
     private Rank previousRank;
     private Rank currentRank;
     private double salesMonthly;
-    private Map<String, Double> comission;
+    private Map<String, Double> commission;
 
     public Vendor(long cedula, String name, Rank currentRank, double salesMonthly) {
         this.cedula = cedula;
         this.name = name;
         this.currentRank = currentRank;
         this.salesMonthly = salesMonthly;
-        this.comission = new HashMap<>();
+        this.commission = new HashMap<>();
     }
 
     public long getCedula() {
@@ -58,27 +58,27 @@ public class Vendor {
         this.salesMonthly = salesMonthly;
     }
 
-    public double getComission(String type) {
-        return comission.get(type);
+    public double getCommission(String type) {
+        return commission.get(type);
     }
 
-    public void setComissionType(String type, double percentage) {
-        comission.put(type, percentage);
+    public void setCommissionType(String type, double percentage) {
+        commission.put(type, percentage);
     }
 
-    public String getComissionDescription() {
+    public String getCommissionDescription() {
         String description = "";
         String separator = "";
 
-        for (Map.Entry<String, Double> entry : comission.entrySet()) {
-            description += separator + entry.getValue() + "% " + entry.getKey();
+        for (Map.Entry<String, Double> entry : commission.entrySet()) {
+            description += separator + entry.getValue() * 100 + "% " + entry.getKey();
             separator = " + ";
         }
 
         return description;
     }
 
-    public void assignPersonalComission() {
+    public void assignPersonalCommission() {
         String type = "personal";
         double percentage = 0;
 
@@ -99,10 +99,10 @@ public class Vendor {
 
         percentage = percentage / 100;
 
-        setComissionType(type, percentage);
+        setCommissionType(type, percentage);
     }
 
-    public void assignlevelUpComission() {
+    public void assignLevelUpCommission() {
         String type = "level up";
         double percentage = 0;
 
@@ -120,6 +120,6 @@ public class Vendor {
 
         percentage = percentage / 100;
 
-        setComissionType(type, percentage);
+        setCommissionType(type, percentage);
     }
 }
