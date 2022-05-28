@@ -1,9 +1,12 @@
 package main.java.com.vendors.models;
 
 import main.java.com.vendors.enums.Rank;
+import main.java.com.vendors.tree.Tree;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static main.java.com.vendors.app.components.Container.vendors;
 
 public class Vendor {
     private final long cedula;
@@ -59,7 +62,7 @@ public class Vendor {
     }
 
     public double getCommission() {
-        double commissionValue = calculateCommission();
+        double commissionValue = calculateCommission() + vendors.getLevelCommission(this);
 
         return commissionValue;
     }

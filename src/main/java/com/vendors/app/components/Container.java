@@ -13,7 +13,7 @@ public class Container extends JFrame {
     private JButton button1;
     private JPanel containerPanel;
     private JLabel title;
-    public Tree vendors;
+    public static Tree vendors;
 
     public Container() {
         setContentPane(containerPanel);

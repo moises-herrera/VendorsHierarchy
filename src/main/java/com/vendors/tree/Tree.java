@@ -282,6 +282,7 @@ public class Tree {
 
     public double calculateLevelCommission(List children, int currentLevel, double commission) {
         ListNode current = children.getHead();
+        ++currentLevel;
 
         while (current != null) {
             double childSales = current.getTreeNode().getVendor().getSalesMonthly();
@@ -300,7 +301,7 @@ public class Tree {
             commission += childSales * percentageLevel;
 
             if (!current.getTreeNode().getChildren().isEmpty()) {
-                return calculateLevelCommission(current.getTreeNode().getChildren(), ++currentLevel, commission);
+                return calculateLevelCommission(current.getTreeNode().getChildren(), currentLevel, commission);
             }
 
             current = current.getNext();
