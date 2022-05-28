@@ -1,9 +1,9 @@
-package main.java.com.vendors.tree;
+package main.com.vendors.tree;
 
-import main.java.com.vendors.enums.Rank;
-import main.java.com.vendors.list.List;
-import main.java.com.vendors.list.ListNode;
-import main.java.com.vendors.models.Vendor;
+import main.com.vendors.enums.Rank;
+import main.com.vendors.list.List;
+import main.com.vendors.list.ListNode;
+import main.com.vendors.models.Vendor;
 
 public class Tree {
     private TreeNode root;

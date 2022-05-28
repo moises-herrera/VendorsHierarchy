@@ -1,6 +1,6 @@
-package main.java.com.vendors.list;
+package main.com.vendors.list;
 
-import main.java.com.vendors.tree.TreeNode;
+import main.com.vendors.tree.TreeNode;
 
 public class ListNode {
     private TreeNode treeNode;

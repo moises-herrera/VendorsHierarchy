@@ -1,12 +1,11 @@
-package main.java.com.vendors.models;
+package main.com.vendors.models;
 
-import main.java.com.vendors.enums.Rank;
-import main.java.com.vendors.tree.Tree;
+import main.com.vendors.enums.Rank;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static main.java.com.vendors.app.components.Container.vendors;
+import static main.com.vendors.app.components.Container.vendors;
 
 public class Vendor {
     private final long cedula;

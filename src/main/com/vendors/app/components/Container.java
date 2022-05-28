@@ -1,8 +1,8 @@
-package main.java.com.vendors.app.components;
+package main.com.vendors.app.components;
 
-import main.java.com.vendors.enums.Rank;
-import main.java.com.vendors.models.Vendor;
-import main.java.com.vendors.tree.Tree;
+import main.com.vendors.enums.Rank;
+import main.com.vendors.models.Vendor;
+import main.com.vendors.tree.Tree;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

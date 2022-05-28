@@ -1,4 +1,4 @@
-package main.java.com.vendors.enums;
+package main.com.vendors.enums;
 
 public enum Rank {
     COBRE("Cobre"), BRONCE("Bronce"), PLATA("Plata"), ORO("Oro");
