@@ -131,7 +131,7 @@ public class Tree {
             vendorParent = findParentById(root.getChildren(), person.getCedula());
         }
 
-        double childrenSales = calculateChildrenSales(vendorParent.getChildren(), 0);
+        double childrenSales = calculateChildrenSales(vendorParent.getChildren());
         TreeNode childWithSilver = existsChildWithRank(vendorParent.getChildren(), 0, Rank.PLATA);
         int treeLevels = countTreeLevels(vendorParent.getChildren());
 
@@ -163,6 +163,10 @@ public class Tree {
         }
 
         return sales;
+    }
+
+    public double calculateChildrenSales(List children) {
+        return calculateChildrenSales(children, 0);
     }
 
     public double calculateChildrenSales(List children, double sales) {
