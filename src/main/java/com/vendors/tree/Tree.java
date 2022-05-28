@@ -99,7 +99,6 @@ public class Tree {
         }
 
         double salesInLevelOne = calculateChildrenSalesByLevel(vendorParent.getChildren(), 1);
-        System.out.println(person.getName() + " sales: " + salesInLevelOne);
 
         if (person.getSalesMonthly() > 200000 && salesInLevelOne > 300000) {
             return true;
@@ -116,9 +115,9 @@ public class Tree {
         }
 
         double childrenSales = calculateChildrenSales(vendorParent.getChildren(), 0);
-        int childrenInOne = countChildrenByLevel(vendorParent.getChildren(), 0, 0);
+        int childrenInLevelOne = countChildrenByLevel(vendorParent.getChildren(), 1);
 
-        if (person.getSalesMonthly() > 300000 && childrenSales > 1000000 && childrenInOne >= 3) {
+        if (person.getSalesMonthly() > 300000 && childrenSales > 1000000 && childrenInLevelOne >= 3) {
             return true;
         }
 
@@ -196,18 +195,23 @@ public class Tree {
         return level;
     }
 
-    public int countChildrenByLevel(List children, int level, int counter) {
+    public int countChildrenByLevel(List children, int checkLevel) {
+        return countChildrenByLevel(children, 0, checkLevel, 0);
+    }
+
+    public int countChildrenByLevel(List children, int level, int checkLevel, int counter) {
         ListNode current = children.getHead();
+        ++level;
 
         while (current != null) {
-            if (level > 1) break;
+            if (level > checkLevel) break;
 
-            if (level == 1) {
+            if (level == checkLevel) {
                 counter++;
             }
 
             if (!current.getTreeNode().getChildren().isEmpty()) {
-                return countChildrenByLevel(current.getTreeNode().getChildren(), ++level, counter);
+                return countChildrenByLevel(current.getTreeNode().getChildren(), level, checkLevel, counter);
             }
 
             current = current.getNext();
