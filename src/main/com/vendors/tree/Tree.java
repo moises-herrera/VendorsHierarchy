@@ -4,6 +4,8 @@ import main.com.vendors.enums.Rank;
 import main.com.vendors.list.List;
 import main.com.vendors.list.ListNode;
 import main.com.vendors.models.Vendor;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Tree {
     private TreeNode root;
@@ -18,6 +20,14 @@ public class Tree {
 
     public void setRoot(TreeNode root) {
         this.root = root;
+    }
+
+    public JSONObject serializeTree() {
+        JSONObject rootJSON = root.getVendor().toJSON();
+
+        traverse(root.getChildren(), rootJSON);
+        System.out.println(rootJSON);
+        return rootJSON;
     }
 
     public void insert(Vendor data, long parentId) {
@@ -55,27 +65,26 @@ public class Tree {
 
     public void assignRanks(TreeNode localeRoot) {
         ListNode current = localeRoot.getChildren().getHead();
+        Vendor person = localeRoot.getVendor();
 
-        if (verifyRankCopper(localeRoot.getVendor())) {
+        if (verifyRankCopper(person)) {
             localeRoot.getVendor().setCurrentRank(Rank.COBRE);
         }
 
-        if (verifyRankBronze(localeRoot.getVendor())) {
+        if (verifyRankBronze(person)) {
             localeRoot.getVendor().setCurrentRank(Rank.BRONCE);
         }
 
-        if (verifyRankSilver(localeRoot.getVendor())) {
+        if (verifyRankSilver(person)) {
             localeRoot.getVendor().setCurrentRank(Rank.PLATA);
         }
 
-        if (verifyRankGold(localeRoot.getVendor())) {
+        if (verifyRankGold(person)) {
             localeRoot.getVendor().setCurrentRank(Rank.ORO);
         }
 
         while (current != null) {
-            if (!current.getTreeNode().getChildren().isEmpty()) {
-                assignRanks(current.getTreeNode());
-            }
+            assignRanks(current.getTreeNode());
 
             current = current.getNext();
         }
@@ -83,14 +92,13 @@ public class Tree {
 
     public void assignCommissions(TreeNode localeRoot) {
         ListNode current = localeRoot.getChildren().getHead();
+        Vendor person = localeRoot.getVendor();
 
-        localeRoot.getVendor().assignPersonalCommission();
-        localeRoot.getVendor().assignLevelUpCommission();
+        person.assignPersonalCommission();
+        person.assignLevelUpCommission();
 
         while (current != null) {
-            if (!current.getTreeNode().getChildren().isEmpty()) {
-                assignCommissions(current.getTreeNode());
-            }
+            assignCommissions(current.getTreeNode());
 
             current = current.getNext();
         }
@@ -308,6 +316,23 @@ public class Tree {
         }
 
         return commission;
+    }
+
+    public void traverse(List children, JSONObject vendor) {
+        ListNode current = children.getHead();
+        JSONArray array = new JSONArray();
+
+        while (current != null) {
+            array.put(current.getTreeNode().getVendor().toJSON());
+
+            if (!current.getTreeNode().getChildren().isEmpty()) {
+                traverse(current.getTreeNode().getChildren(), current.getTreeNode().getVendor().toJSON());
+            }
+
+            current = current.getNext();
+        }
+
+        vendor.put("children", array);
     }
 
 }
