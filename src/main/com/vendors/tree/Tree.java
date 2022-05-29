@@ -23,9 +23,13 @@ public class Tree {
         this.root = root;
     }
 
+    public boolean isEmpty() {
+        return root == null;
+    }
+
     public JSONObject serializeTree() {
         JSONObject rootJSON = root.getVendor().toJSON();
-        recursiveSerialize(root.getChildren(), rootJSON);
+        recursiveSerialize(root, rootJSON);
 
         return rootJSON;
     }
@@ -40,27 +44,38 @@ public class Tree {
                 return;
             }
 
-            TreeNode parent = findParentById(root.getChildren(), parentId);
-            if (parent != null) parent.addChild(newNode);
+            TreeNode parent = find(parentId);
+            if (parent != null) {
+                parent.addChild(newNode);
+            }
         }
     }
 
-    public TreeNode findParentById(List children, long parentId) {
-        ListNode current = children.getHead();
+    public TreeNode find(long nodeId) {
+        TreeNode foundNode = null;
 
-        while (current != null) {
-            if (current.getTreeNode().getVendor().getCedula() == parentId) {
-                break;
-            }
-
-            if (!current.getTreeNode().getChildren().isEmpty()) {
-                return findParentById(current.getTreeNode().getChildren(), parentId);
-            }
-
-            current = current.getNext();
+        if (!isEmpty()) {
+            foundNode = recursiveFind(root, nodeId);
         }
 
-        return current != null ? current.getTreeNode() : null;
+        return foundNode;
+    }
+
+    public TreeNode recursiveFind(TreeNode currentNode, long nodeId) {
+        TreeNode resultNode = null;
+        int i = 0;
+
+        if (currentNode.getVendor().getCedula() == nodeId) {
+            resultNode = currentNode;
+        } else if (currentNode.hasChildren()) {
+            i = 0;
+            while (resultNode == null && i < currentNode.getNumberChildren()) {
+                resultNode = recursiveFind(currentNode.getChildAt(i), nodeId);
+                i++;
+            }
+        }
+
+        return resultNode;
     }
 
     public void assignRanks(TreeNode localeRoot) {
@@ -68,19 +83,19 @@ public class Tree {
         Vendor person = localeRoot.getVendor();
 
         if (verifyRankCopper(person)) {
-            localeRoot.getVendor().setCurrentRank(Rank.COBRE);
+            person.setCurrentRank(Rank.COBRE);
         }
 
-        if (verifyRankBronze(person)) {
-            localeRoot.getVendor().setCurrentRank(Rank.BRONCE);
+        if (verifyRankBronze(localeRoot)) {
+            person.setCurrentRank(Rank.BRONCE);
         }
 
-        if (verifyRankSilver(person)) {
-            localeRoot.getVendor().setCurrentRank(Rank.PLATA);
+        if (verifyRankSilver(localeRoot)) {
+            person.setCurrentRank(Rank.PLATA);
         }
 
-        if (verifyRankGold(person)) {
-            localeRoot.getVendor().setCurrentRank(Rank.ORO);
+        if (verifyRankGold(localeRoot)) {
+            person.setCurrentRank(Rank.ORO);
         }
 
         while (current != null) {
@@ -112,51 +127,33 @@ public class Tree {
         return false;
     }
 
-    public boolean verifyRankBronze(Vendor person) {
-        TreeNode vendorParent = root;
+    public boolean verifyRankBronze(TreeNode treeNode) {
+        double salesInLevelOne = calculateChildrenSalesByLevel(treeNode.getChildren(), 1);
 
-        if (person.getCedula() != root.getVendor().getCedula()) {
-            vendorParent = findParentById(root.getChildren(), person.getCedula());
-        }
-
-        double salesInLevelOne = calculateChildrenSalesByLevel(vendorParent.getChildren(), 1);
-
-        if (person.getSalesMonthly() > 200000 && salesInLevelOne > 300000) {
+        if (treeNode.getVendor().getSalesMonthly() > 200000 && salesInLevelOne > 300000) {
             return true;
         }
 
         return false;
     }
 
-    public boolean verifyRankSilver(Vendor person) {
-        TreeNode vendorParent = root;
+    public boolean verifyRankSilver(TreeNode treeNode) {
+        double childrenSales = calculateChildrenSales(treeNode.getChildren());
+        int childrenInLevelOne = countChildrenByLevel(treeNode.getChildren(), 1);
 
-        if (person.getCedula() != root.getVendor().getCedula()) {
-            vendorParent = findParentById(root.getChildren(), person.getCedula());
-        }
-
-        double childrenSales = calculateChildrenSales(vendorParent.getChildren());
-        int childrenInLevelOne = countChildrenByLevel(vendorParent.getChildren(), 1);
-
-        if (person.getSalesMonthly() > 300000 && childrenSales > 1000000 && childrenInLevelOne >= 3) {
+        if (treeNode.getVendor().getSalesMonthly() > 300000 && childrenSales > 1000000 && childrenInLevelOne >= 3) {
             return true;
         }
 
         return false;
     }
 
-    public boolean verifyRankGold(Vendor person) {
-        TreeNode vendorParent = root;
+    public boolean verifyRankGold(TreeNode treeNode) {
+        double childrenSales = calculateChildrenSales(treeNode.getChildren());
+        TreeNode childWithSilver = existsChildWithRank(treeNode.getChildren(), Rank.PLATA);
+        int treeLevels = countTreeLevels(treeNode.getChildren());
 
-        if (person.getCedula() != root.getVendor().getCedula()) {
-            vendorParent = findParentById(root.getChildren(), person.getCedula());
-        }
-
-        double childrenSales = calculateChildrenSales(vendorParent.getChildren());
-        TreeNode childWithSilver = existsChildWithRank(vendorParent.getChildren(), Rank.PLATA);
-        int treeLevels = countTreeLevels(vendorParent.getChildren());
-
-        if (person.getSalesMonthly() > 400000 && childrenSales > 2000000 && childWithSilver != null && treeLevels >= 3) {
+        if (treeNode.getVendor().getSalesMonthly() > 400000 && childrenSales > 2000000 && childWithSilver != null && treeLevels >= 3) {
             return true;
         }
 
@@ -276,7 +273,7 @@ public class Tree {
         TreeNode vendorParent = root;
 
         if (person.getCedula() != root.getVendor().getCedula()) {
-            vendorParent = findParentById(root.getChildren(), person.getCedula());
+            vendorParent = find(person.getCedula());
         }
 
         double commission = calculateLevelCommission(vendorParent.getChildren());
@@ -318,8 +315,8 @@ public class Tree {
         return commission;
     }
 
-    public void recursiveSerialize(List children, JSONObject vendor) {
-        ListNode current = children.getHead();
+    public void recursiveSerialize(TreeNode treeNode, JSONObject vendor) {
+        ListNode current = treeNode.getChildren() != null ? treeNode.getChildren().getHead() : null;
         JSONArray array = new JSONArray();
         vendor.put("children", array);
 
@@ -327,7 +324,7 @@ public class Tree {
             JSONObject currentVendor = current.getTreeNode().getVendor().toJSON();
             array.put(currentVendor);
 
-            recursiveSerialize(current.getTreeNode().getChildren(), currentVendor);
+            recursiveSerialize(current.getTreeNode(), currentVendor);
 
             current = current.getNext();
         }
