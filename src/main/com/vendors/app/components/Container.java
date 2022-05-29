@@ -61,6 +61,7 @@ public class Container extends JFrame {
 
                     vendors.assignRanks(vendors.getRoot());
                     vendors.assignCommissions(vendors.getRoot());
+
                     JSONObject vendorsJSON = vendors.serializeTree();
                     System.out.println(vendorsJSON);
                 }

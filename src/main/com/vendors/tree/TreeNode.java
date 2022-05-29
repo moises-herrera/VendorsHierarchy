@@ -31,4 +31,16 @@ public class TreeNode {
     public void addChild(TreeNode node) {
         this.children.add(node);
     }
+
+    public boolean hasChildren() {
+        return !children.isEmpty();
+    }
+
+    public int getNumberChildren() {
+        return children.size();
+    }
+
+    public TreeNode getChildAt(int index) {
+        return children.getNode(index);
+    }
 }

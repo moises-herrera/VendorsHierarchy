@@ -39,6 +39,34 @@ public class List {
         return head == null;
     }
 
+    public int size() {
+        ListNode current = head;
+        int counter = 0;
+
+        while (current != null) {
+            counter++;
+            current = current.getNext();
+        }
+
+        return counter;
+    }
+
+    public TreeNode getNode(int index) {
+        ListNode current = head;
+        int i = 0;
+
+        while (current != null) {
+            if (i == index) {
+                return current.getTreeNode();
+            }
+
+            i++;
+            current = current.getNext();
+        }
+
+        return null;
+    }
+
     public void printList() {
         if (isEmpty()) return;
         ListNode current = head;
@@ -48,4 +76,5 @@ public class List {
             current = current.getNext();
         }
     }
+
 }
