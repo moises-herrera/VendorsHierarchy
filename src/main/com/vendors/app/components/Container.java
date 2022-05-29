@@ -3,6 +3,7 @@ package main.com.vendors.app.components;
 import main.com.vendors.enums.Rank;
 import main.com.vendors.models.Vendor;
 import main.com.vendors.tree.Tree;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -60,7 +61,8 @@ public class Container extends JFrame {
 
                     vendors.assignRanks(vendors.getRoot());
                     vendors.assignCommissions(vendors.getRoot());
-                    vendors.serializeTree();
+                    JSONObject vendorsJSON = vendors.serializeTree();
+                    System.out.println(vendorsJSON);
                 }
             }
         });

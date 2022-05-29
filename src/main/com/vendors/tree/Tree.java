@@ -1,11 +1,12 @@
 package main.com.vendors.tree;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import main.com.vendors.enums.Rank;
 import main.com.vendors.list.List;
 import main.com.vendors.list.ListNode;
 import main.com.vendors.models.Vendor;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class Tree {
     private TreeNode root;
@@ -24,9 +25,8 @@ public class Tree {
 
     public JSONObject serializeTree() {
         JSONObject rootJSON = root.getVendor().toJSON();
+        recursiveSerialize(root.getChildren(), rootJSON);
 
-        traverse(root.getChildren(), rootJSON);
-        System.out.println(rootJSON);
         return rootJSON;
     }
 
@@ -318,21 +318,19 @@ public class Tree {
         return commission;
     }
 
-    public void traverse(List children, JSONObject vendor) {
+    public void recursiveSerialize(List children, JSONObject vendor) {
         ListNode current = children.getHead();
         JSONArray array = new JSONArray();
+        vendor.put("children", array);
 
         while (current != null) {
-            array.put(current.getTreeNode().getVendor().toJSON());
+            JSONObject currentVendor = current.getTreeNode().getVendor().toJSON();
+            array.put(currentVendor);
 
-            if (!current.getTreeNode().getChildren().isEmpty()) {
-                traverse(current.getTreeNode().getChildren(), current.getTreeNode().getVendor().toJSON());
-            }
+            recursiveSerialize(current.getTreeNode().getChildren(), currentVendor);
 
             current = current.getNext();
         }
-
-        vendor.put("children", array);
     }
 
 }
