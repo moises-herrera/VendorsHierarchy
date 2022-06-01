@@ -6,25 +6,36 @@ import main.com.vendors.tree.Tree;
 import org.json.JSONObject;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 
 public class Container extends JFrame {
-    private JButton button1;
+
     private JPanel containerPanel;
     private JLabel title;
+    private JButton uploadFileBtn;
+    private JLabel logo;
+    private JPanel containerLogo;
     public static Tree vendors;
 
     public Container() {
         setContentPane(containerPanel);
-        setTitle("Initial app");
-        setSize(450, 300);
+        setTitle("Vendors App");
+        ImageIcon appIcon = new ImageIcon(getClass().getResource("../resources/app-icon.png"));
+        setIconImage(appIcon.getImage());
+        setSize(450, 400);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        ImageIcon icon = new ImageIcon(getClass().getResource("../resources/vendors.png"));
+        ImageIcon resizedIcon = new ImageIcon(icon.getImage().getScaledInstance(280, 240, Image.SCALE_DEFAULT));
+        logo.setIcon(resizedIcon);
+
         vendors = new Tree();
         setLocationRelativeTo(null);
         setVisible(true);
-        button1.addActionListener(new ActionListener() {
+        uploadFileBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
