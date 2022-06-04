@@ -6,22 +6,21 @@ import main.com.vendors.enums.Rank;
 import java.util.HashMap;
 import java.util.Map;
 
-import static main.com.vendors.app.components.Container.vendors;
-
 public class Vendor {
     private final long cedula;
     private String name;
     private Rank previousRank;
     private Rank currentRank;
     private double salesMonthly;
-    private final Map<String, Double> commission;
+    private final Map<String, Double> commissionType;
+    private double commission;
 
     public Vendor(long cedula, String name, Rank currentRank, double salesMonthly) {
         this.cedula = cedula;
         this.name = name;
         this.currentRank = currentRank;
         this.salesMonthly = salesMonthly;
-        this.commission = new HashMap<>();
+        this.commissionType = new HashMap<>();
     }
 
     public long getCedula() {
@@ -62,24 +61,26 @@ public class Vendor {
     }
 
     public double getCommission() {
-        double commissionValue = calculateCommission() + vendors.getLevelCommission(this);
-
-        return commissionValue;
+        return commission;
     }
 
-    public void setCommissionType(String type, double percentage) {
-        commission.put(type, percentage);
+    public void setCommission(double commission) {
+        this.commission = commission;
     }
 
     public double getCommissionType(String type) {
-        return commission.get(type);
+        return commissionType.get(type);
+    }
+
+    public void setCommissionType(String type, double percentage) {
+        commissionType.put(type, percentage);
     }
 
     public String getCommissionDescription() {
         String description = "";
         String separator = "";
 
-        for (Map.Entry<String, Double> entry : commission.entrySet()) {
+        for (Map.Entry<String, Double> entry : commissionType.entrySet()) {
             description += separator + entry.getValue() * 100 + "% " + entry.getKey();
             separator = " + ";
         }
@@ -98,14 +99,16 @@ public class Vendor {
         return vendor;
     }
 
-    public double calculateCommission() {
-        double accumulator = 0;
-
-        for (Map.Entry<String, Double> entry : commission.entrySet()) {
-            accumulator += salesMonthly * entry.getValue();
+    public void calculateVendorCommission() {
+        for (Map.Entry<String, Double> entry : commissionType.entrySet()) {
+            if (!entry.getKey().matches("level\\s\\d*$")) {
+                commission += entry.getValue() * salesMonthly;
+            }
         }
+    }
 
-        return accumulator;
+    public void addLevelCommission(double value) {
+        commission += value;
     }
 
     public void assignPersonalCommission() {
@@ -152,4 +155,29 @@ public class Vendor {
 
         setCommissionType(type, percentage);
     }
+
+    public void assignLevelCommission(int maxLevel) {
+        for (int number = 1; number <= maxLevel; number++) {
+            if (number > 3) break;
+
+            double percentage = 0;
+
+            switch (number) {
+                case 1:
+                    percentage = 1;
+                    break;
+                case 2:
+                    percentage = 2;
+                    break;
+                case 3:
+                    percentage = 3;
+                    break;
+            }
+
+            percentage = percentage / 100;
+
+            setCommissionType("level " + number, percentage);
+        }
+    }
+
 }

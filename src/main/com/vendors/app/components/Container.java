@@ -42,7 +42,6 @@ public class Container extends JFrame {
                 int eventReturned = fileChooser.showOpenDialog(containerPanel);
                 if (eventReturned == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
-                    String line = "";
                     BufferedReader reader = null;
                     try {
                         reader = new BufferedReader(new FileReader(selectedFile));
@@ -52,7 +51,8 @@ public class Container extends JFrame {
 
                     while (true) {
                         try {
-                            if ((line = reader.readLine()) == null) break;
+                            String line = reader.readLine();
+                            if (line == null) break;
                             String[] attributes = line.trim().split("\t");
 
                             long cedula = Long.parseLong(attributes[0]);
