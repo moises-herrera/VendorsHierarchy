@@ -3,6 +3,8 @@ package main.com.vendors.models;
 import org.json.JSONObject;
 import main.com.vendors.enums.Rank;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,11 +83,18 @@ public class Vendor {
         String separator = "";
 
         for (Map.Entry<String, Double> entry : commissionType.entrySet()) {
-            description += separator + entry.getValue() * 100 + "% " + entry.getKey();
-            separator = " + ";
+            if (entry.getValue() > 0) {
+                description += separator + formatDecimals(entry.getValue() * 100) + "% " + entry.getKey();
+                separator = " + ";
+            }
         }
 
         return description;
+    }
+
+    public String formatDecimals(double number) {
+        NumberFormat formatter = new DecimalFormat("#.##");
+        return formatter.format(number);
     }
 
     public JSONObject toJSON() {
@@ -139,15 +148,15 @@ public class Vendor {
         String type = "level up";
         double percentage = 0;
 
-        if (previousRank == Rank.COBRE && currentRank == Rank.BRONCE) {
+        if (currentRank == Rank.BRONCE) {
             percentage = 5;
         }
 
-        if (previousRank == Rank.BRONCE && currentRank == Rank.PLATA) {
+        if (currentRank == Rank.PLATA) {
             percentage = 10;
         }
 
-        if (previousRank == Rank.PLATA && currentRank == Rank.ORO) {
+        if (currentRank == Rank.ORO) {
             percentage = 15;
         }
 

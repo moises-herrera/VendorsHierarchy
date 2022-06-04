@@ -18,7 +18,7 @@ public class Container extends JFrame {
     private JButton uploadFileBtn;
     private JLabel logo;
     private JPanel containerLogo;
-    public static Tree vendors;
+    public Tree vendors;
 
     public Container() {
         setContentPane(containerPanel);

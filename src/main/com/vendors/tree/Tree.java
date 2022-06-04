@@ -33,6 +33,21 @@ public class Tree {
         return rootJSON;
     }
 
+    public void recursiveSerialize(TreeNode treeNode, JSONObject vendor) {
+        ListNode current = treeNode.getChildren() != null ? treeNode.getChildren().getHead() : null;
+        JSONArray array = new JSONArray();
+        vendor.put("children", array);
+
+        while (current != null) {
+            JSONObject currentVendor = current.getTreeNode().getVendor().toJSON();
+            array.put(currentVendor);
+
+            recursiveSerialize(current.getTreeNode(), currentVendor);
+
+            current = current.getNext();
+        }
+    }
+
     public void insert(Vendor data, long parentId) {
         TreeNode newNode = new TreeNode(data);
         if (root == null) {
@@ -67,7 +82,6 @@ public class Tree {
         if (currentNode.getVendor().getCedula() == nodeId) {
             resultNode = currentNode;
         } else if (currentNode.hasChildren()) {
-            i = 0;
             while (resultNode == null && i < currentNode.getNumberChildren()) {
                 resultNode = recursiveFind(currentNode.getChildAt(i), nodeId);
                 i++;
@@ -311,21 +325,6 @@ public class Tree {
         }
 
         return commission;
-    }
-
-    public void recursiveSerialize(TreeNode treeNode, JSONObject vendor) {
-        ListNode current = treeNode.getChildren() != null ? treeNode.getChildren().getHead() : null;
-        JSONArray array = new JSONArray();
-        vendor.put("children", array);
-
-        while (current != null) {
-            JSONObject currentVendor = current.getTreeNode().getVendor().toJSON();
-            array.put(currentVendor);
-
-            recursiveSerialize(current.getTreeNode(), currentVendor);
-
-            current = current.getNext();
-        }
     }
 
 }
