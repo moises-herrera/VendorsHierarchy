@@ -95,7 +95,7 @@ public class Tree {
         ListNode current = localeRoot.getChildren().getHead();
         Vendor person = localeRoot.getVendor();
 
-        if (verifyRankCopper(person)) {
+        if (verifyRankCopper(localeRoot)) {
 
             if (verifyRankBronze(localeRoot)) {
 
@@ -144,8 +144,8 @@ public class Tree {
         }
     }
 
-    public boolean verifyRankCopper(Vendor person) {
-        return person.getSalesMonthly() >= 0;
+    public boolean verifyRankCopper(TreeNode treeNode) {
+        return treeNode.getVendor().getSalesMonthly() >= 0;
     }
 
     public boolean verifyRankBronze(TreeNode treeNode) {

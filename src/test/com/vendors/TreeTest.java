@@ -53,6 +53,29 @@ public class TreeTest {
     }
 
     @Test
+    void insertNode() {
+        // Arrange
+        Vendor first = new Vendor(1000, "Joseph", Rank.PLATA, 700000);
+        Vendor second = new Vendor(2000, "Maria", Rank.BRONCE, 900000);
+        Vendor third = new Vendor(2000, "Luis", Rank.BRONCE, 900000);
+        Vendor fourth = new Vendor(2000, "Alex", Rank.ORO, 900000);
+
+        // Act
+        tree.insert(first, 0);
+        tree.insert(second, first.getCedula());
+        tree.insert(third, first.getCedula());
+        tree.insert(fourth, first.getCedula());
+
+        // Assert
+        TreeNode root = tree.getRoot();
+        int childrenCount = root.getNumberChildren();
+
+        Assertions.assertFalse(tree.isEmpty());
+        Assertions.assertTrue(root.hasChildren());
+        Assertions.assertEquals(3, childrenCount);
+    }
+
+    @Test
     void findNodeById() {
         // Arrange
         initializeTree();
