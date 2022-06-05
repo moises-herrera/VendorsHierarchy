@@ -24,5 +24,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="sparkjava.spark.core" level="project" />
+    <orderEntry type="library" name="slf4j.nop" level="project" />
   </component>
 </module>
