@@ -51,6 +51,20 @@ public class List {
         return counter;
     }
 
+    public TreeNode findByParentId(long id) {
+        ListNode current = head;
+
+        while (current != null) {
+            if (current.getTreeNode().getVendor().getParentId() == id) {
+                return current.getTreeNode();
+            }
+
+            current = current.getNext();
+        }
+
+        return null;
+    }
+
     public TreeNode getNode(int index) {
         ListNode current = head;
         int i = 0;

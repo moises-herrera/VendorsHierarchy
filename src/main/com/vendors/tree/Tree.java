@@ -65,6 +65,22 @@ public class Tree {
         }
     }
 
+    public void insert(TreeNode newNode, long parentId) {
+        if (root == null && parentId == 0) {
+            root = newNode;
+        } else if (parentId > 0) {
+            if (root.getVendor().getCedula() == parentId) {
+                root.addChild(newNode);
+                return;
+            }
+
+            TreeNode parent = find(parentId);
+            if (parent != null) {
+                parent.addChild(newNode);
+            }
+        }
+    }
+
     public TreeNode find(long nodeId) {
         TreeNode foundNode = null;
 
@@ -77,14 +93,15 @@ public class Tree {
 
     public TreeNode recursiveFind(TreeNode currentNode, long nodeId) {
         TreeNode resultNode = null;
-        int i = 0;
 
         if (currentNode.getVendor().getCedula() == nodeId) {
             resultNode = currentNode;
         } else if (currentNode.hasChildren()) {
-            while (resultNode == null && i < currentNode.getNumberChildren()) {
-                resultNode = recursiveFind(currentNode.getChildAt(i), nodeId);
-                i++;
+            ListNode current = currentNode.getChildren().getHead();
+
+            while (resultNode == null && current != null) {
+                resultNode = recursiveFind(current.getTreeNode(), nodeId);
+                current = current.getNext();
             }
         }
 
@@ -186,16 +203,15 @@ public class Tree {
     }
 
     public double calculateChildrenSales(TreeNode currentNode, double sales, int level) {
-        int i = 0;
-
         if (level > 0) sales += currentNode.getVendor().getSalesMonthly();
 
         if (currentNode.hasChildren()) {
+            ListNode current = currentNode.getChildren().getHead();
             ++level;
 
-            while (i < currentNode.getNumberChildren()) {
-                sales = calculateChildrenSales(currentNode.getChildAt(i), sales, level);
-                i++;
+            while (current != null) {
+                sales = calculateChildrenSales(current.getTreeNode(), sales, level);
+                current = current.getNext();
             }
         }
 
@@ -207,18 +223,17 @@ public class Tree {
     }
 
     public double calculateChildrenSalesByLevel(TreeNode currentNode, double sales, int currentLevel, int checkLevel) {
-        int i = 0;
-
         if (currentLevel == checkLevel) {
             sales += currentNode.getVendor().getSalesMonthly();
         }
 
         if (currentNode.hasChildren()) {
+            ListNode current = currentNode.getChildren().getHead();
             ++currentLevel;
 
-            while (i < currentNode.getNumberChildren()) {
-                sales = calculateChildrenSalesByLevel(currentNode.getChildAt(i), sales, currentLevel, checkLevel);
-                i++;
+            while (current != null) {
+                sales = calculateChildrenSalesByLevel(current.getTreeNode(), sales, currentLevel, checkLevel);
+                current = current.getNext();
             }
         }
 
@@ -230,18 +245,17 @@ public class Tree {
     }
 
     public int countTreeLevels(TreeNode currentNode, int level, int greater) {
-        int i = 0;
-
         if (level > greater) {
             greater = level;
         }
 
         if (currentNode.hasChildren()) {
+            ListNode current = currentNode.getChildren().getHead();
             ++level;
 
-            while (i < currentNode.getNumberChildren()) {
-                greater = countTreeLevels(currentNode.getChildAt(i), level, greater);
-                i++;
+            while (current != null) {
+                greater = countTreeLevels(current.getTreeNode(), level, greater);
+                current = current.getNext();
             }
         }
 
@@ -253,17 +267,16 @@ public class Tree {
     }
 
     public int countChildrenByLevel(TreeNode currentNode, int level, int checkLevel, int counter) {
-        int i = 0;
-
         if (currentNode.hasChildren()) {
+            ListNode current = currentNode.getChildren().getHead();
             ++level;
 
-            while (level <= checkLevel && i < currentNode.getNumberChildren()) {
+            while (level <= checkLevel && current != null) {
                 if (level == checkLevel) {
                     counter++;
                 }
-                countChildrenByLevel(currentNode.getChildAt(i), level, checkLevel, counter);
-                i++;
+                countChildrenByLevel(current.getTreeNode(), level, checkLevel, counter);
+                current = current.getNext();
             }
         }
 
@@ -276,16 +289,16 @@ public class Tree {
 
     public TreeNode existsChildWithRank(TreeNode currentNode, int level, Rank rank) {
         TreeNode found = null;
-        int i = 0;
 
         if (level > 0 && currentNode.getVendor().getCurrentRank() == rank) {
             found = currentNode;
         } else if (currentNode.hasChildren()) {
+            ListNode current = currentNode.getChildren().getHead();
             ++level;
 
-            while (found == null && i < currentNode.getNumberChildren()) {
-                found = existsChildWithRank(currentNode.getChildAt(i), level, rank);
-                i++;
+            while (found == null && current != null) {
+                found = existsChildWithRank(current.getTreeNode(), level, rank);
+                current = current.getNext();
             }
         }
 
@@ -297,8 +310,6 @@ public class Tree {
     }
 
     public double calculateLevelCommission(TreeNode currentNode, int currentLevel, double commission) {
-        int i = 0;
-
         if (currentLevel > 0) {
             double childSales = currentNode.getVendor().getSalesMonthly();
             double percentageLevel = 0;
@@ -316,11 +327,12 @@ public class Tree {
         }
 
         if (currentNode.hasChildren()) {
+            ListNode current = currentNode.getChildren().getHead();
             ++currentLevel;
 
-            while (i < currentNode.getNumberChildren()) {
-                commission = calculateLevelCommission(currentNode.getChildAt(i), currentLevel, commission);
-                i++;
+            while (current != null) {
+                commission = calculateLevelCommission(current.getTreeNode(), currentLevel, commission);
+                current = current.getNext();
             }
         }
 

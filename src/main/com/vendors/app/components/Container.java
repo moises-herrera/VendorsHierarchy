@@ -1,8 +1,11 @@
 package main.com.vendors.app.components;
 
 import main.com.vendors.enums.Rank;
+import main.com.vendors.list.List;
+import main.com.vendors.list.ListNode;
 import main.com.vendors.models.Vendor;
 import main.com.vendors.tree.Tree;
+import main.com.vendors.tree.TreeNode;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -18,7 +21,8 @@ public class Container extends JFrame {
     private JButton uploadFileBtn;
     private JLabel logo;
     private JPanel containerLogo;
-    public Tree vendors;
+    public Tree vendorsTree;
+    public List vendorsList;
 
     public Container() {
         setContentPane(containerPanel);
@@ -32,7 +36,8 @@ public class Container extends JFrame {
         ImageIcon resizedIcon = new ImageIcon(icon.getImage().getScaledInstance(280, 240, Image.SCALE_DEFAULT));
         logo.setIcon(resizedIcon);
 
-        vendors = new Tree();
+        vendorsList = new List();
+        vendorsTree = new Tree();
         setLocationRelativeTo(null);
         setVisible(true);
         uploadFileBtn.addActionListener(new ActionListener() {
@@ -63,21 +68,40 @@ public class Container extends JFrame {
                             if (attributes.length == 5)
                                 parentId = Long.parseLong(attributes[4]);
 
-                            Vendor person = new Vendor(cedula, name, currentRank, salesMonthly);
-                            vendors.insert(person, parentId);
+                            Vendor person = new Vendor(cedula, name, currentRank, salesMonthly, parentId);
+                            vendorsList.add(new TreeNode(person));
+
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
                     }
 
-                    vendors.assignRanks(vendors.getRoot());
-                    vendors.assignCommissions(vendors.getRoot());
+                    insertNodes(0);
+                    vendorsTree.assignRanks(vendorsTree.getRoot());
+                    vendorsTree.assignCommissions(vendorsTree.getRoot());
 
-                    JSONObject vendorsJSON = vendors.serializeTree();
+                    JSONObject vendorsJSON = vendorsTree.serializeTree();
                     System.out.println(vendorsJSON);
                 }
             }
         });
+    }
+
+    public void insertNodes(long parentId) {
+        TreeNode localeRoot = vendorsList.findByParentId(parentId);
+        ListNode current = vendorsList.getHead();
+
+        if (parentId == 0) {
+            vendorsTree.insert(localeRoot, parentId);
+        }
+
+        while (current != null) {
+            if (current.getTreeNode().getVendor().getParentId() == parentId) {
+                vendorsTree.insert(current.getTreeNode(), parentId);
+                insertNodes(current.getTreeNode().getVendor().getCedula());
+            }
+            current = current.getNext();
+        }
     }
 
 }

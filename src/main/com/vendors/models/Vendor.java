@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class Vendor {
     private final long cedula;
+    private long parentId;
     private String name;
     private Rank previousRank;
     private Rank currentRank;
@@ -17,16 +18,29 @@ public class Vendor {
     private final Map<String, Double> commissionType;
     private double commission;
 
-    public Vendor(long cedula, String name, Rank currentRank, double salesMonthly) {
+    public Vendor (long cedula, String name, Rank currentRank, double salesMonthly) {
+        this(cedula, name, currentRank, salesMonthly, 0);
+    }
+
+    public Vendor(long cedula, String name, Rank currentRank, double salesMonthly, long parentId) {
         this.cedula = cedula;
         this.name = name;
         this.currentRank = currentRank;
         this.salesMonthly = salesMonthly;
         this.commissionType = new HashMap<>();
+        this.parentId = parentId;
     }
 
     public long getCedula() {
         return cedula;
+    }
+
+    public long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(long parentId) {
+        this.parentId = parentId;
     }
 
     public String getName() {

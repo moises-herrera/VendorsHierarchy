@@ -1,6 +1,8 @@
 package test.com.vendors;
 
 import main.com.vendors.enums.Rank;
+import main.com.vendors.list.List;
+import main.com.vendors.list.ListNode;
 import main.com.vendors.models.Vendor;
 import main.com.vendors.tree.Tree;
 import main.com.vendors.tree.TreeNode;
@@ -20,7 +22,8 @@ public class TreeTest {
     }
 
     void initializeTree() {
-        File vendorsFile = new File("src\\test\\com\\vendors\\mocks\\vendors.txt");
+        List vendorsList = new List();
+        File vendorsFile = new File("src\\test\\com\\vendors\\mocks\\vendors_unordered.txt");
         BufferedReader reader;
 
         try {
@@ -43,12 +46,31 @@ public class TreeTest {
                 if (attributes.length == 5)
                     parentId = Long.parseLong(attributes[4]);
 
-                Vendor person = new Vendor(cedula, name, currentRank, salesMonthly);
-                tree.insert(person, parentId);
+                Vendor person = new Vendor(cedula, name, currentRank, salesMonthly, parentId);
+                vendorsList.add(new TreeNode(person));
 
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+        }
+
+        insertNodesFromList(vendorsList, 0);
+    }
+
+    void insertNodesFromList(List vendorsList, long parentId) {
+        TreeNode localeRoot = vendorsList.findByParentId(parentId);
+        ListNode current = vendorsList.getHead();
+
+        if (parentId == 0) {
+            tree.insert(localeRoot, parentId);
+        }
+
+        while (current != null) {
+            if (current.getTreeNode().getVendor().getParentId() == parentId) {
+                tree.insert(current.getTreeNode(), parentId);
+                insertNodesFromList(vendorsList, current.getTreeNode().getVendor().getCedula());
+            }
+            current = current.getNext();
         }
     }
 
@@ -146,19 +168,44 @@ public class TreeTest {
     void assignCommissions() {
         // Arrange
         initializeTree();
-        String descriptionExpected = "10% level up + 20% personal + 1% level 1 + 2% level 2 + 3% level 3";
-        double commissionExpected = 135000 + 243900;
+        String[] descriptionsExpected = {
+                "10% level up + 20% personal + 1% level 1 + 2% level 2 + 3% level 3",
+                "5% level up + 15% personal + 1% level 1 + 2% level 2 + 3% level 3",
+                "5% level up + 15% personal"
+        };
+        double[] commissionsExpected = {
+                378900,
+                156000,
+                120000
+        };
 
         // Act
         tree.assignCommissions(tree.getRoot());
 
         Vendor person = tree.getRoot().getVendor();
-        String commissionDescription = person.getCommissionDescription();
-        double commission = person.getCommission();
+        Vendor secondPerson = tree.find(903000).getVendor();
+        Vendor thirdPerson = tree.find(908000).getVendor();
+
+        String[] commissionDescriptions = {
+                person.getCommissionDescription(),
+                secondPerson.getCommissionDescription(),
+                thirdPerson.getCommissionDescription()
+        };
+        double[] commissions = {
+                person.getCommission(),
+                secondPerson.getCommission(),
+                thirdPerson.getCommission()
+        };
 
         // Assert
-        Assertions.assertEquals(descriptionExpected, commissionDescription);
-        Assertions.assertEquals(commissionExpected, commission);
+        Assertions.assertEquals(descriptionsExpected[0], commissionDescriptions[0]);
+        Assertions.assertEquals(commissionsExpected[0], commissions[0]);
+
+        Assertions.assertEquals(descriptionsExpected[1], commissionDescriptions[1]);
+        Assertions.assertEquals(commissionsExpected[1], commissions[1]);
+
+        Assertions.assertEquals(descriptionsExpected[2], commissionDescriptions[2]);
+        Assertions.assertEquals(commissionsExpected[2], commissions[2]);
     }
 
     @Test
@@ -166,7 +213,7 @@ public class TreeTest {
         // Arrange
         initializeTree();
 
-        File vendorsFile = new File("src\\test\\com\\vendors\\mocks\\vendors.txt");
+        File vendorsFile = new File("src\\test\\com\\vendors\\mocks\\vendors_unordered.txt");
         BufferedReader reader;
 
         try {
@@ -205,7 +252,7 @@ public class TreeTest {
         // Arrange
         initializeTree();
 
-        File vendorsFile = new File("src\\test\\com\\vendors\\mocks\\vendors.txt");
+        File vendorsFile = new File("src\\test\\com\\vendors\\mocks\\vendors_unordered.txt");
         BufferedReader reader;
 
         try {
@@ -235,7 +282,7 @@ public class TreeTest {
         }
 
         // Act
-        TreeNode localeRoot = tree.getRoot().getChildAt(0);
+        TreeNode localeRoot = tree.find(345345);
         double totalSales = tree.calculateChildrenSales(localeRoot);
 
         // Assert
