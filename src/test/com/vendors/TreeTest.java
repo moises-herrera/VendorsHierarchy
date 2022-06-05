@@ -22,8 +22,12 @@ public class TreeTest {
     }
 
     void initializeTree() {
+        initializeTree("vendors");
+    }
+
+    void initializeTree(String fileName) {
         List vendorsList = new List();
-        File vendorsFile = new File("src\\test\\com\\vendors\\mocks\\vendors_unordered.txt");
+        File vendorsFile = new File("src\\test\\com\\vendors\\mocks\\" + fileName + ".txt");
         BufferedReader reader;
 
         try {
@@ -100,7 +104,7 @@ public class TreeTest {
     @Test
     void findNodeById() {
         // Arrange
-        initializeTree();
+        initializeTree("vendors_unordered");
 
         // Act
         long nodeId = 908000;
@@ -117,7 +121,7 @@ public class TreeTest {
     @Test
     void countTreeLevels() {
         // Arrange
-        initializeTree();
+        initializeTree("vendors_unordered");
 
         // Act
         int levels = tree.countTreeLevels(tree.getRoot());
@@ -129,7 +133,7 @@ public class TreeTest {
     @Test
     void countChildrenByLevelOfRoot() {
         // Arrange
-        initializeTree();
+        initializeTree("vendors_unordered");
 
         // Act
         int children = tree.countChildrenByLevel(tree.getRoot(), 1);
@@ -141,7 +145,7 @@ public class TreeTest {
     @Test
     void countChildrenByLevelOfLocaleRoot() {
         // Arrange
-        initializeTree();
+        initializeTree("vendors_unordered");
 
         // Act
         TreeNode localeRoot = tree.find(556777);
@@ -154,7 +158,7 @@ public class TreeTest {
     @Test
     void assignRanks() {
         // Arrange
-        initializeTree();
+        initializeTree("vendors_unordered");
 
         // Act
         tree.assignRanks(tree.getRoot());
@@ -167,7 +171,7 @@ public class TreeTest {
     @Test
     void assignCommissions() {
         // Arrange
-        initializeTree();
+        initializeTree("vendors_unordered");
         String[] descriptionsExpected = {
                 "10% level up + 20% personal + 1% level 1 + 2% level 2 + 3% level 3",
                 "5% level up + 15% personal + 1% level 1 + 2% level 2 + 3% level 3",
@@ -211,9 +215,10 @@ public class TreeTest {
     @Test
     void childrenSalesOfRoot() {
         // Arrange
-        initializeTree();
+        String fileName = "vendors_unordered";
+        initializeTree(fileName);
 
-        File vendorsFile = new File("src\\test\\com\\vendors\\mocks\\vendors_unordered.txt");
+        File vendorsFile = new File("src\\test\\com\\vendors\\mocks\\" + fileName + ".txt");
         BufferedReader reader;
 
         try {
@@ -250,9 +255,10 @@ public class TreeTest {
     @Test
     void childrenSalesOfLocaleRoot() {
         // Arrange
-        initializeTree();
+        String fileName = "vendors_unordered";
+        initializeTree(fileName);
 
-        File vendorsFile = new File("src\\test\\com\\vendors\\mocks\\vendors_unordered.txt");
+        File vendorsFile = new File("src\\test\\com\\vendors\\mocks\\" + fileName + ".txt");
         BufferedReader reader;
 
         try {
@@ -292,7 +298,7 @@ public class TreeTest {
     @Test
     void calculateChildrenSalesByLevelOfRoot() {
         // Arrange
-        initializeTree();
+        initializeTree("vendors_unordered");
 
         // Act
         double expectedFirst = 1800000;
@@ -309,7 +315,7 @@ public class TreeTest {
     @Test
     void calculateChildrenSalesByLevelOfLocaleRoot() {
         // Arrange
-        initializeTree();
+        initializeTree("vendors_unordered");
 
         // Act
         TreeNode localeRoot = tree.find(909000);
@@ -328,7 +334,7 @@ public class TreeTest {
     @Test
     void existsChildWithRank() {
         // Arrange
-        initializeTree();
+        initializeTree("vendors_unordered");
 
         // Act
         Rank searchedRank = Rank.ORO;
@@ -343,7 +349,7 @@ public class TreeTest {
     @Test
     void notExistsChildWithRank() {
         // Arrange
-        initializeTree();
+        initializeTree("vendors_unordered");
 
         // Act
         TreeNode localeRoot = tree.find(901000);
@@ -357,7 +363,7 @@ public class TreeTest {
     @Test
     void calculateLevelCommissionOfRoot() {
         // Arrange
-        initializeTree();
+        initializeTree("vendors_unordered");
 
         // Act
         double rootCommission = tree.calculateLevelCommission(tree.getRoot());
@@ -369,7 +375,7 @@ public class TreeTest {
     @Test
     void calculateLevelCommissionOfLocaleRoot() {
         // Arrange
-        initializeTree();
+        initializeTree("vendors_unordered");
 
         // Act
         TreeNode localeRoot = tree.find(901000);
