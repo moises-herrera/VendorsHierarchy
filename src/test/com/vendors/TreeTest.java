@@ -120,6 +120,25 @@ public class TreeTest {
     }
 
     @Test
+    void assignCommissions() {
+        // Arrange
+        initializeTree();
+        String descriptionExpected = "10% level up + 20% personal + 1% level 1 + 2% level 2 + 3% level 3";
+        double commissionExpected = 135000 + 243900;
+
+        // Act
+        tree.assignCommissions(tree.getRoot());
+
+        Vendor person = tree.getRoot().getVendor();
+        String commissionDescription = person.getCommissionDescription();
+        double commission = person.getCommission();
+
+        // Assert
+        Assertions.assertEquals(descriptionExpected, commissionDescription);
+        Assertions.assertEquals(commissionExpected, commission);
+    }
+
+    @Test
     void childrenSalesOfRoot() {
         // Arrange
         initializeTree();

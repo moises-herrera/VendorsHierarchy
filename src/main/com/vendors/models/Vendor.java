@@ -110,7 +110,7 @@ public class Vendor {
 
     public void calculateVendorCommission() {
         for (Map.Entry<String, Double> entry : commissionType.entrySet()) {
-            if (!entry.getKey().matches("level\\s\\d*$")) {
+            if (!entry.getKey().matches("level\\s\\d*$") && entry.getValue() > 0) {
                 commission += entry.getValue() * salesMonthly;
             }
         }
