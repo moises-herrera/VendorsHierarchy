@@ -1,11 +1,9 @@
 package main.com.vendors.app.controllers;
 
-import main.com.vendors.app.lib.enums.Rank;
 import main.com.vendors.app.lib.list.List;
-import main.com.vendors.app.lib.list.ListNode;
-import main.com.vendors.app.models.Vendor;
 import main.com.vendors.app.lib.tree.Tree;
-import main.com.vendors.app.lib.tree.TreeNode;
+
+import main.com.vendors.app.utils.DataReader;
 
 import org.json.JSONObject;
 
@@ -42,54 +40,14 @@ public class VendorController {
             throw new RuntimeException(ex);
         }
 
-        while (true) {
-            try {
-                String line = reader.readLine();
-                System.out.println("Line: " + line);
-                if (line == null) break;
-                String[] attributes = line.trim().split("\t");
-
-                long cedula = Long.parseLong(attributes[0]);
-                String name = attributes[1];
-                Rank currentRank = Rank.valueOf(attributes[2].toUpperCase());
-                double salesMonthly = Double.parseDouble(attributes[3]);
-                long parentId = 0;
-                if (attributes.length == 5)
-                    parentId = Long.parseLong(attributes[4]);
-
-                Vendor person = new Vendor(cedula, name, currentRank, salesMonthly, parentId);
-                vendorsList.add(new TreeNode(person));
-
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-
-        }
-
-        insertNodes(vendorsList, vendorsTree, 0);
+        List data = DataReader.getListFromFile(reader);
+        vendorsTree.insertNodesFromList(data, 0);
         vendorsTree.assignRanks(vendorsTree.getRoot());
         vendorsTree.assignCommissions(vendorsTree.getRoot());
 
         JSONObject vendorsJSON = vendorsTree.serializeTree();
 
         return vendorsJSON;
-    }
-
-    private void insertNodes(List list, Tree tree, long parentId) {
-        TreeNode localeRoot = list.findByParentId(parentId);
-        ListNode current = list.getHead();
-
-        if (parentId == 0) {
-            tree.insert(localeRoot, parentId);
-        }
-
-        while (current != null) {
-            if (current.getTreeNode().getVendor().getParentId() == parentId) {
-                tree.insert(current.getTreeNode(), parentId);
-                insertNodes(list, tree, current.getTreeNode().getVendor().getCedula());
-            }
-            current = current.getNext();
-        }
     }
 
 }

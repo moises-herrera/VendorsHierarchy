@@ -2,11 +2,11 @@ package test.com.vendors;
 
 import main.com.vendors.app.lib.enums.Rank;
 import main.com.vendors.app.lib.list.List;
-import main.com.vendors.app.lib.list.ListNode;
 import main.com.vendors.app.models.Vendor;
 import main.com.vendors.app.lib.tree.Tree;
 import main.com.vendors.app.lib.tree.TreeNode;
 
+import main.com.vendors.app.utils.DataReader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,9 +26,8 @@ public class TreeTest {
     }
 
     void initializeTree(String fileName) {
-        List vendorsList = new List();
         File vendorsFile = new File("src\\test\\com\\vendors\\mocks\\" + fileName + ".txt");
-        BufferedReader reader;
+        BufferedReader reader = null;
 
         try {
             reader = new BufferedReader(new FileReader(vendorsFile));
@@ -36,46 +35,8 @@ public class TreeTest {
             throw new RuntimeException(ex);
         }
 
-        while (true) {
-            try {
-                String line = reader.readLine();
-                if (line == null) break;
-                String[] attributes = line.trim().split("\t");
-
-                long cedula = Long.parseLong(attributes[0]);
-                String name = attributes[1];
-                Rank currentRank = Rank.valueOf(attributes[2].toUpperCase());
-                double salesMonthly = Double.parseDouble(attributes[3]);
-                long parentId = 0;
-                if (attributes.length == 5)
-                    parentId = Long.parseLong(attributes[4]);
-
-                Vendor person = new Vendor(cedula, name, currentRank, salesMonthly, parentId);
-                vendorsList.add(new TreeNode(person));
-
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-
-        insertNodesFromList(vendorsList, 0);
-    }
-
-    void insertNodesFromList(List vendorsList, long parentId) {
-        TreeNode localeRoot = vendorsList.findByParentId(parentId);
-        ListNode current = vendorsList.getHead();
-
-        if (parentId == 0) {
-            tree.insert(localeRoot, parentId);
-        }
-
-        while (current != null) {
-            if (current.getTreeNode().getVendor().getParentId() == parentId) {
-                tree.insert(current.getTreeNode(), parentId);
-                insertNodesFromList(vendorsList, current.getTreeNode().getVendor().getCedula());
-            }
-            current = current.getNext();
-        }
+        List data = DataReader.getListFromFile(reader);
+        tree.insertNodesFromList(data, 0);
     }
 
     @Test
@@ -229,8 +190,8 @@ public class TreeTest {
 
         double childrenSales = 0;
 
-        while (true) {
-            try {
+        try {
+            while (true) {
                 String line = reader.readLine();
                 if (line == null) break;
                 String[] attributes = line.trim().split("\t");
@@ -238,10 +199,10 @@ public class TreeTest {
                 if (attributes.length == 5) {
                     childrenSales += Double.parseDouble(attributes[3]);
                 }
-
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
             }
+            reader.close();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
 
         // Act
@@ -269,8 +230,8 @@ public class TreeTest {
 
         double childrenSales = 0;
 
-        while (true) {
-            try {
+        try {
+            while (true) {
                 String line = reader.readLine();
                 if (line == null) break;
                 String[] attributes = line.trim().split("\t");
@@ -281,10 +242,10 @@ public class TreeTest {
                     if (parentId == 345345 || parentId == 567543)
                         childrenSales += Double.parseDouble(attributes[3]);
                 }
-
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
             }
+            reader.close();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
 
         // Act
