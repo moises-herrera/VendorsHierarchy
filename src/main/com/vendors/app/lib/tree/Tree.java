@@ -1,11 +1,11 @@
-package main.com.vendors.tree;
+package main.com.vendors.app.lib.tree;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import main.com.vendors.enums.Rank;
-import main.com.vendors.list.ListNode;
-import main.com.vendors.models.Vendor;
+import main.com.vendors.app.lib.enums.Rank;
+import main.com.vendors.app.lib.list.ListNode;
+import main.com.vendors.app.models.Vendor;
 
 public class Tree {
     private TreeNode root;

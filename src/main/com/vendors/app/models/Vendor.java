@@ -1,7 +1,7 @@
-package main.com.vendors.models;
+package main.com.vendors.app.models;
 
 import org.json.JSONObject;
-import main.com.vendors.enums.Rank;
+import main.com.vendors.app.lib.enums.Rank;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
