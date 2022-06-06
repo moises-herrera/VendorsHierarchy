@@ -1,8 +1,8 @@
-package main.com.vendors.tree;
+package main.com.vendors.app.lib.tree;
 
-import main.com.vendors.list.List;
-import main.com.vendors.list.ListNode;
-import main.com.vendors.models.Vendor;
+import main.com.vendors.app.lib.list.List;
+import main.com.vendors.app.lib.list.ListNode;
+import main.com.vendors.app.models.Vendor;
 
 public class TreeNode {
     private Vendor vendor;
