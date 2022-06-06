@@ -26,15 +26,6 @@ public class List {
         this.tail = tail;
     }
 
-    public void add(TreeNode treeNode) {
-        if (!isEmpty()) {
-            tail.setNext(new ListNode(treeNode, null));
-            tail = tail.getNext();
-        } else {
-            head = tail = new ListNode(treeNode, null);
-        }
-    }
-
     public boolean isEmpty() {
         return head == null;
     }
@@ -49,6 +40,68 @@ public class List {
         }
 
         return counter;
+    }
+
+    public void addFirst(TreeNode treeNode) {
+        head = new ListNode(treeNode, head);
+        if (tail == null) tail = head;
+    }
+
+    public void add(TreeNode treeNode) {
+        if (!isEmpty()) {
+            tail.setNext(new ListNode(treeNode, null));
+            tail = tail.getNext();
+        } else {
+            head = tail = new ListNode(treeNode, null);
+        }
+    }
+
+    public void removeNodeByData(long cedula) {
+        if (isEmpty()) return;
+
+        ListNode current = head;
+        ListNode previous = null;
+
+        if (current != null && current.getTreeNode().getVendor().getCedula() == cedula) {
+            head = current.getNext();
+            return;
+        }
+
+        while (current != null && current.getTreeNode().getVendor().getCedula() != cedula) {
+            previous = current;
+            current = current.getNext();
+        }
+
+        if (current == null) {
+            return;
+        }
+
+        previous.setNext(current.getNext());
+    }
+
+    public void removeAllNodesByData(long cedula) {
+        if (isEmpty()) return;
+
+        ListNode current = head;
+        ListNode previous = null;
+
+        while (current != null && current.getTreeNode().getVendor().getCedula() == cedula) {
+            head = current.getNext();
+            current = head;
+        }
+
+        while (current != null) {
+            while (current != null && current.getTreeNode().getVendor().getCedula() != cedula) {
+                previous = current;
+                current = current.getNext();
+            }
+
+            if (current == null)
+                return;
+
+            previous.setNext(current.getNext());
+            current = previous.getNext();
+        }
     }
 
     public TreeNode findByParentId(long id) {
