@@ -1,10 +1,9 @@
 package main.com.vendors.app.models;
 
+import main.com.vendors.app.utils.Formatter;
 import org.json.JSONObject;
 import main.com.vendors.app.lib.enums.Rank;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +24,7 @@ public class Vendor {
     public Vendor(long cedula, String name, Rank currentRank, double salesMonthly, long parentId) {
         this.cedula = cedula;
         this.name = name;
+        this.previousRank = currentRank;
         this.currentRank = currentRank;
         this.salesMonthly = salesMonthly;
         this.commissionType = new HashMap<>();
@@ -77,7 +77,7 @@ public class Vendor {
     }
 
     public double getCommission() {
-        return commission;
+        return commission + calculateVendorCommission();
     }
 
     public void setCommission(double commission) {
@@ -98,17 +98,12 @@ public class Vendor {
 
         for (Map.Entry<String, Double> entry : commissionType.entrySet()) {
             if (entry.getValue() > 0) {
-                description += separator + formatDecimals(entry.getValue() * 100) + "% " + entry.getKey();
+                description += separator + Formatter.formatDecimals(entry.getValue() * 100) + "% " + entry.getKey();
                 separator = " + ";
             }
         }
 
         return description;
-    }
-
-    public String formatDecimals(double number) {
-        NumberFormat formatter = new DecimalFormat("#.##");
-        return formatter.format(number);
     }
 
     public JSONObject toJSON() {
@@ -122,12 +117,16 @@ public class Vendor {
         return vendor;
     }
 
-    public void calculateVendorCommission() {
+    public double calculateVendorCommission() {
+        double calculatedCommission = 0;
+
         for (Map.Entry<String, Double> entry : commissionType.entrySet()) {
             if (!entry.getKey().matches("level\\s\\d*$") && entry.getValue() > 0) {
-                commission += entry.getValue() * salesMonthly;
+                calculatedCommission += entry.getValue() * salesMonthly;
             }
         }
+
+        return calculatedCommission;
     }
 
     public void addLevelCommission(double value) {
@@ -159,6 +158,8 @@ public class Vendor {
     }
 
     public void assignLevelUpCommission() {
+        if (previousRank == currentRank) return;
+
         String type = "level up";
         double percentage = 0;
 
