@@ -137,6 +137,24 @@ public class VendorTest {
     }
 
     @Test
+    void getCommissionDescriptionWithLevels() {
+        // Arrange
+        vendor.setCurrentRank(Rank.PLATA);
+        vendor.setCommissionType("personal", 0.2);
+        vendor.setCommissionType("level up", 0.1);
+        vendor.setCommissionType("level 1", 0.01);
+        vendor.setCommissionType("level 2", 0.02);
+
+        String descriptionExpected = "10% level up + 20% personal + 1% level 1 + 2% level 2";
+
+        // Act
+        String description = vendor.getCommissionDescription();
+
+        // Assert
+        Assertions.assertEquals(descriptionExpected, description);
+    }
+
+    @Test
     void serializeProperties() {
         JSONObject vendorSerialized = vendor.toJSON();
 
