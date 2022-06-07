@@ -80,7 +80,7 @@ public class TreeTest {
     }
 
     @Test
-    void countTreeLevels() {
+    void countTreeLevelsOfRoot() {
         // Arrange
         initializeTree("vendors_unordered");
 
@@ -89,6 +89,31 @@ public class TreeTest {
 
         // Assert
         Assertions.assertEquals(7, levels);
+    }
+
+    @Test
+    void countTreeLevelsOfLocaleRoot() {
+        // Arrange
+        initializeTree("vendors_unordered");
+
+        // Act
+        TreeNode localeRoot = tree.find(902000);
+        int levels = tree.countTreeLevels(localeRoot);
+
+        // Assert
+        Assertions.assertEquals(2, levels);
+    }
+    @Test
+    void countTreeLevelsWhenChildrenIsEmpty() {
+        // Arrange
+        initializeTree("vendors_unordered");
+
+        // Act
+        TreeNode localeRoot = tree.find(556778);
+        int levels = tree.countTreeLevels(localeRoot);
+
+        // Assert
+        Assertions.assertEquals(0, levels);
     }
 
     @Test
