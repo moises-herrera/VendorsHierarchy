@@ -1,5 +1,6 @@
 package main.com.vendors.app.lib.tree;
 
+import main.com.vendors.app.lib.list.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -78,6 +79,23 @@ public class Tree {
             if (parent != null) {
                 parent.addChild(newNode);
             }
+        }
+    }
+
+    public void insertNodesFromList(List list, long parentId) {
+        TreeNode localeRoot = list.findByParentId(parentId);
+        ListNode current = list.getHead();
+
+        if (parentId == 0) {
+            insert(localeRoot, parentId);
+        }
+
+        while (current != null) {
+            if (current.getTreeNode().getVendor().getParentId() == parentId) {
+                insert(current.getTreeNode(), parentId);
+                insertNodesFromList(list, current.getTreeNode().getVendor().getCedula());
+            }
+            current = current.getNext();
         }
     }
 
