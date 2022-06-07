@@ -1,6 +1,6 @@
-package main.com.vendors.app.lib.list;
+package com.vendors.app.lib.list;
 
-import main.com.vendors.app.lib.tree.TreeNode;
+import com.vendors.app.lib.tree.TreeNode;
 
 public class ListNode {
     private TreeNode treeNode;

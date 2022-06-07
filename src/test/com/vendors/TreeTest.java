@@ -1,12 +1,12 @@
-package test.com.vendors;
+package com.vendors;
 
-import main.com.vendors.app.lib.enums.Rank;
-import main.com.vendors.app.lib.list.List;
-import main.com.vendors.app.models.Vendor;
-import main.com.vendors.app.lib.tree.Tree;
-import main.com.vendors.app.lib.tree.TreeNode;
+import com.vendors.app.lib.enums.Rank;
+import com.vendors.app.lib.list.List;
+import com.vendors.app.models.Vendor;
+import com.vendors.app.lib.tree.Tree;
+import com.vendors.app.lib.tree.TreeNode;
+import com.vendors.app.utils.DataReader;
 
-import main.com.vendors.app.utils.DataReader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

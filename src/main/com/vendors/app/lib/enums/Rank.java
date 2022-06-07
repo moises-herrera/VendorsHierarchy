@@ -1,4 +1,4 @@
-package main.com.vendors.app.lib.enums;
+package com.vendors.app.lib.enums;
 
 public enum Rank {
     COBRE("Cobre"), BRONCE("Bronce"), PLATA("Plata"), ORO("Oro");

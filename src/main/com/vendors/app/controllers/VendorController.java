@@ -1,9 +1,9 @@
-package main.com.vendors.app.controllers;
+package com.vendors.app.controllers;
 
-import main.com.vendors.app.lib.list.List;
-import main.com.vendors.app.lib.tree.Tree;
+import com.vendors.app.lib.list.List;
+import com.vendors.app.lib.tree.Tree;
 
-import main.com.vendors.app.utils.DataReader;
+import com.vendors.app.utils.DataReader;
 
 import org.json.JSONObject;
 

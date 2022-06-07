@@ -1,7 +1,7 @@
-package test.com.vendors;
+package com.vendors;
 
-import main.com.vendors.app.lib.enums.Rank;
-import main.com.vendors.app.models.Vendor;
+import com.vendors.app.lib.enums.Rank;
+import com.vendors.app.models.Vendor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
