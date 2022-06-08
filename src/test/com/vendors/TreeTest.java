@@ -1,12 +1,12 @@
-package test.com.vendors;
+package com.vendors;
 
-import main.com.vendors.app.lib.enums.Rank;
-import main.com.vendors.app.lib.list.List;
-import main.com.vendors.app.models.Vendor;
-import main.com.vendors.app.lib.tree.Tree;
-import main.com.vendors.app.lib.tree.TreeNode;
+import com.vendors.app.lib.enums.Rank;
+import com.vendors.app.lib.list.List;
+import com.vendors.app.models.Vendor;
+import com.vendors.app.lib.tree.Tree;
+import com.vendors.app.lib.tree.TreeNode;
+import com.vendors.app.utils.DataReader;
 
-import main.com.vendors.app.utils.DataReader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -159,17 +159,62 @@ public class TreeTest {
         // Arrange
         initializeTree("vendors_unordered");
         String[] descriptionsExpected = {
-                "10% level up + 20% personal + 1% level 1 + 2% level 2 + 3% level 3",
-                "5% level up + 15% personal + 1% level 1 + 2% level 2 + 3% level 3",
-                "5% level up + 15% personal"
+                "20% personal + 1% level 1 + 2% level 2 + 3% level 3",
+                "15% personal + 1% level 1 + 2% level 2 + 3% level 3",
+                "15% personal"
         };
         double[] commissionsExpected = {
-                378900,
-                156000,
-                120000
+                333900,
+                126000,
+                90000
         };
 
         // Act
+        tree.assignCommissions(tree.getRoot());
+
+        Vendor person = tree.getRoot().getVendor();
+        Vendor secondPerson = tree.find(903000).getVendor();
+        Vendor thirdPerson = tree.find(908000).getVendor();
+
+        String[] commissionDescriptions = {
+                person.getCommissionDescription(),
+                secondPerson.getCommissionDescription(),
+                thirdPerson.getCommissionDescription()
+        };
+        double[] commissions = {
+                person.getCommission(),
+                secondPerson.getCommission(),
+                thirdPerson.getCommission()
+        };
+
+        // Assert
+        Assertions.assertEquals(descriptionsExpected[0], commissionDescriptions[0]);
+        Assertions.assertEquals(commissionsExpected[0], commissions[0]);
+
+        Assertions.assertEquals(descriptionsExpected[1], commissionDescriptions[1]);
+        Assertions.assertEquals(commissionsExpected[1], commissions[1]);
+
+        Assertions.assertEquals(descriptionsExpected[2], commissionDescriptions[2]);
+        Assertions.assertEquals(commissionsExpected[2], commissions[2]);
+    }
+
+    @Test
+    void assignCommissionsWithLevelUp() {
+        // Arrange
+        initializeTree("vendors_unordered");
+        String[] descriptionsExpected = {
+                "15% level up + 25% personal + 1% level 1 + 2% level 2 + 3% level 3", // from silver to gold
+                "15% personal + 1% level 1 + 2% level 2 + 3% level 3", // prev = current (no level up)
+                "10% personal" // from gold to cobre (no level up)
+        };
+        double[] commissionsExpected = {
+                423900,
+                126000,
+                60000
+        };
+
+        // Act
+        tree.assignRanks(tree.getRoot());
         tree.assignCommissions(tree.getRoot());
 
         Vendor person = tree.getRoot().getVendor();

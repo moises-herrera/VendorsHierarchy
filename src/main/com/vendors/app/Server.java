@@ -1,9 +1,9 @@
-package main.com.vendors.app;
+package com.vendors.app;
 
 import static spark.Spark.*;
-
-import main.com.vendors.app.controllers.VendorController;
 import spark.Filter;
+
+import com.vendors.app.controllers.VendorController;
 
 public class Server {
     public static void main(String[] args) {

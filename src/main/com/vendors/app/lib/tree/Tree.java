@@ -1,12 +1,12 @@
-package main.com.vendors.app.lib.tree;
+package com.vendors.app.lib.tree;
 
-import main.com.vendors.app.lib.list.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import main.com.vendors.app.lib.enums.Rank;
-import main.com.vendors.app.lib.list.ListNode;
-import main.com.vendors.app.models.Vendor;
+import com.vendors.app.lib.enums.Rank;
+import com.vendors.app.lib.list.List;
+import com.vendors.app.lib.list.ListNode;
+import com.vendors.app.models.Vendor;
 
 public class Tree {
     private TreeNode root;
@@ -35,18 +35,22 @@ public class Tree {
     }
 
     public void recursiveSerialize(TreeNode treeNode, JSONObject vendor) {
-        ListNode current = treeNode.getChildren() != null ? treeNode.getChildren().getHead() : null;
         JSONArray array = new JSONArray();
         vendor.put("children", array);
 
-        while (current != null) {
-            JSONObject currentVendor = current.getTreeNode().getVendor().toJSON();
-            array.put(currentVendor);
+        if (treeNode.hasChildren()) {
+            ListNode current = treeNode.getChildren().getHead();
 
-            recursiveSerialize(current.getTreeNode(), currentVendor);
+            while (current != null) {
+                JSONObject currentVendor = current.getTreeNode().getVendor().toJSON();
+                array.put(currentVendor);
 
-            current = current.getNext();
+                recursiveSerialize(current.getTreeNode(), currentVendor);
+
+                current = current.getNext();
+            }
         }
+
     }
 
     public void insert(Vendor data, long parentId) {
@@ -166,8 +170,6 @@ public class Tree {
         person.assignPersonalCommission();
         person.assignLevelUpCommission();
         if (maxLevel > 0) person.assignLevelCommission(maxLevel);
-
-        person.calculateVendorCommission();
 
         double commission = calculateLevelCommission(localeRoot);
         if (commission > 0) person.addLevelCommission(commission);

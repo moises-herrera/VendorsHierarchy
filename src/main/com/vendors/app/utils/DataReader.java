@@ -1,9 +1,9 @@
-package main.com.vendors.app.utils;
+package com.vendors.app.utils;
 
-import main.com.vendors.app.lib.enums.Rank;
-import main.com.vendors.app.lib.list.List;
-import main.com.vendors.app.lib.tree.TreeNode;
-import main.com.vendors.app.models.Vendor;
+import com.vendors.app.lib.enums.Rank;
+import com.vendors.app.lib.list.List;
+import com.vendors.app.lib.tree.TreeNode;
+import com.vendors.app.models.Vendor;
 
 import java.io.*;
 
