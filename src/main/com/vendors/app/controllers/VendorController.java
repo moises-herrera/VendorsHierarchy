@@ -28,7 +28,6 @@ public class VendorController {
         requestRaw.setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
         Part file = requestRaw.getPart("file");
 
-        List vendorsList = new List();
         Tree vendorsTree = new Tree();
 
         BufferedReader reader = null;
@@ -39,12 +38,14 @@ public class VendorController {
             throw new RuntimeException(ex);
         }
 
-        List data = DataReader.getListFromFile(reader);
-        vendorsTree.insertNodesFromList(data, 0);
+        List dataList = DataReader.getListFromFile(reader);
+
+        vendorsTree.insertNodesFromList(dataList, 0);
         vendorsTree.assignRanks(vendorsTree.getRoot());
         vendorsTree.assignCommissions(vendorsTree.getRoot());
 
         JSONObject vendorsJSON = vendorsTree.serializeTree();
+        System.out.println(vendorsJSON);
 
         return vendorsJSON;
     }

@@ -35,18 +35,22 @@ public class Tree {
     }
 
     public void recursiveSerialize(TreeNode treeNode, JSONObject vendor) {
-        ListNode current = treeNode.getChildren() != null ? treeNode.getChildren().getHead() : null;
         JSONArray array = new JSONArray();
         vendor.put("children", array);
 
-        while (current != null) {
-            JSONObject currentVendor = current.getTreeNode().getVendor().toJSON();
-            array.put(currentVendor);
+        if (treeNode.hasChildren()) {
+            ListNode current = treeNode.getChildren().getHead();
 
-            recursiveSerialize(current.getTreeNode(), currentVendor);
+            while (current != null) {
+                JSONObject currentVendor = current.getTreeNode().getVendor().toJSON();
+                array.put(currentVendor);
 
-            current = current.getNext();
+                recursiveSerialize(current.getTreeNode(), currentVendor);
+
+                current = current.getNext();
+            }
         }
+
     }
 
     public void insert(Vendor data, long parentId) {
