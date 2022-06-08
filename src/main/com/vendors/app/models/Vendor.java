@@ -159,7 +159,9 @@ public class Vendor {
     }
 
     public void assignLevelUpCommission() {
-        // if (previousRank == currentRank) return;
+        if (previousRank == currentRank || currentRank.getValue() < previousRank.getValue()) {
+            return;
+        }
 
         String type = "level up";
         double percentage = 0;
