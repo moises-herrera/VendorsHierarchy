@@ -1,8 +1,9 @@
-package main.com.vendors.app.models;
+package com.vendors.app.models;
 
-import main.com.vendors.app.utils.Formatter;
 import org.json.JSONObject;
-import main.com.vendors.app.lib.enums.Rank;
+
+import com.vendors.app.utils.Formatter;
+import com.vendors.app.lib.enums.Rank;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -158,7 +159,9 @@ public class Vendor {
     }
 
     public void assignLevelUpCommission() {
-        if (previousRank == currentRank) return;
+        if (previousRank == currentRank || currentRank.getValue() < previousRank.getValue()) {
+            return;
+        }
 
         String type = "level up";
         double percentage = 0;
